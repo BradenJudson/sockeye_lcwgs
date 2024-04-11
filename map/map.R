@@ -4,7 +4,7 @@ setwd("~/sockeye_lcwgs/map")
 
 library(ggplot2); library(tidyverse); library(raster); library(sf)
 library(bcmaps); library(ggspatial); library(sp); library(geodata)
-library(ggrepel); library(rnaturalearth)
+library(ggrepel); library(rnaturalearth); library(cowplot)
 
 # Custom "not in" operator.
 "%ni%" <- Negate("%in%")
@@ -42,13 +42,13 @@ okanagan <- st_read("ok_path.kml")
     geom_sf(data = bcn, fill = "gray90", linewidth = 1/10) +
     geom_sf(data = bch, fill = "gray90", linewidth = 1/10) +
     ggspatial::annotation_north_arrow(location = "bl",
-                                      pad_x = unit(3.65, "cm"),
+                                      pad_x = unit(3.5, "cm"),
                                       style = ggspatial::north_arrow_fancy_orienteering()) +
     ggspatial::annotation_scale(location = "bl", pad_x = unit(3.75, "cm"),
                                 pad_y = unit(1/10, "cm"),
                                 width_hint = 1/10) + 
     geom_sf(data = okanagan, color  = "skyblue", linewidth = 1/4) +
-    geom_sf(data = riv,     colour = "skyblue", linewidth = 1/4) +
+    geom_sf(data = riv,      colour = "skyblue", linewidth = 1/4) +
     geom_sf(data = rivers,   colour = "skyblue", linewidth = 1/4) +  
     # geom_sf(data = lakes,    colour = "skyblue", fill = "skyblue") +
     geom_point(data = sites, size = 2.5, stroke = 1/3,
@@ -59,17 +59,62 @@ okanagan <- st_read("ok_path.kml")
     scale_fill_manual(values = rep("white", nrow(sites)),
                       labels = paste(sites$sitenum, sites$site)) +
     guides(fill = guide_legend(override.aes = list(alpha = 0))) +
-    coord_sf(xlim = c(-115, -160), ylim = c(44, 62)) +
+    coord_sf(xlim = c(-115, -155), ylim = c(44, 62)) +
     theme_minimal() +
     theme(legend.position = "right", panel.grid = element_blank(), 
           panel.background = element_rect(fill = alpha("skyblue", 1/10)),
           panel.border = element_rect(color = "black", fill = NA),
           plot.margin = unit(c(0,0,0,0), "cm")) +
-    geom_rect(aes(ymin = 43.5, ymax = 54.8, xmax = -150, xmin = -161.6),
+    geom_rect(aes(ymin = 43.5, ymax = 54.8, xmax = -145.5, xmin = -156.5),
               colour = "black", fill = "white", alpha = 1/6, size = 1/20) +
     geom_text(data = sites[sites$sitenum <= 25, ], aes(label = paste(sitenum, ". ", site), 
-                                                       x = -161.5, y = yv, hjust = 0), size = 2, inherit.aes = F) +
+                                                       x = -156, y = yv, hjust = 0), size = 2, inherit.aes = F) +
     geom_text(data = sites[sites$sitenum > 25, ], aes(label = paste(sitenum, ". ", site), 
-                                                      x = -156, y = yv[1:24], hjust = 0), size = 2, inherit.aes = F))
+                                                      x = -151, y = yv[1:24], hjust = 0), size = 2, inherit.aes = F))
 
 ggsave("plots/bc_map.tiff", dpi = 300, width = 6, height = 6)
+
+
+# Inset -------------------------------------------------------------------
+
+
+ca <- map_data("world", "Canada")
+us <- map_data("world", "USA") 
+me <- map_data("world", "Mexico")
+
+(ins <- ggplot() +
+    geom_polygon(data = us, aes(x = long, y = lat, group = group),
+                 fill = "grey80", colour = "black", linewidth = 1/8) +
+    geom_polygon(data = ca, aes(x = long, y = lat, group = group),
+                 fill = "grey90", colour = "black", linewidth = 1/8) +
+    geom_polygon(data = me, aes(x = long, y = lat, group = group),
+                 fill = "grey70", colour = "black", linewidth = 1/8) +
+    theme_void() +
+    theme(panel.border = element_rect(colour = "black", 
+                                      fill = NA, linewidth = 1/4),
+          panel.background = element_rect(fill = "white"))  +
+    annotate("rect", fill = NA, colour = "black",
+             linewidth = 1/2,
+             xmin = -155, xmax = -115,
+             ymin = 44, ymax = 62) +
+    # Important to maintain accurate proportions/orientations. 
+    # Plot is cartesian otherwise and appears distorted.
+    coord_map(ylim = c(72, 20),
+              xlim = c(-57, -165)))
+
+
+
+# Add inset --------------------------------------------------------------------
+
+
+ggdraw(plot = pnw) +
+  draw_plot({
+    ins
+  },
+  x = 0.79,
+  y = 0.53,
+  width = 0.2,
+  height = 0.5)
+
+ggsave("plots/map_winset.tiff", dpi = 300, 
+       width = 6, height = 6)
