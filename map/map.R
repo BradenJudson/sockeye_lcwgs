@@ -72,7 +72,7 @@ okanagan <- st_read("ok_path.kml")
     geom_text(data = sites[sites$sitenum > 25, ], aes(label = paste(sitenum, ". ", site), 
                                                       x = -151, y = yv[1:24], hjust = 0), size = 2, inherit.aes = F))
 
-ggsave("plots/bc_map.tiff", dpi = 300, width = 6, height = 6)
+# ggsave("plots/bc_map.tiff", dpi = 300, width = 6, height = 6)
 
 
 # Inset -------------------------------------------------------------------
@@ -116,5 +116,5 @@ ggdraw(plot = pnw) +
   width = 0.2,
   height = 0.5)
 
-ggsave("plots/map_winset.tiff", dpi = 300, 
+ggsave("../plots/map_winset.tiff", dpi = 300, 
        width = 6, height = 6)

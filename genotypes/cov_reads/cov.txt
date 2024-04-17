@@ -1,0 +1,4 @@
+NS.LH00487_0010.002.IDT_i7_193---IDT_i5_193.Sha-2004-EC02.dedup.clip.rg.bam Average = 1.86429
+NS.LH00487_0010.002.IDT_i7_194---IDT_i5_194.Cor-2010-EC02.dedup.clip.rg.bam Average = 2.02644
+NS.LH00487_0010.002.IDT_i7_205---IDT_i5_205.Sha-2004-EC03.dedup.clip.rg.bam Average = 2.14094
+NS.LH00487_0010.002.IDT_i7_206---IDT_i5_206.Cor-2010-EC04.dedup.clip.rg.bam Average = 1.99554
