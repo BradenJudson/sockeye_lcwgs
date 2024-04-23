@@ -7,7 +7,6 @@
 #SBATCH --time=72:00:00
 #SBATCH --cpus-per-task=64
 #SBATCH --account=grdi_genarcc
-#SBATCH --begin=2024-04-14
 
 source ~/.bashrc
 

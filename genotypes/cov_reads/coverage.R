@@ -20,8 +20,8 @@ dat <- merge(cov, reads, by = "file") %>%
 (lre <- ggplot(data = dat,
         aes(x = reads/1e6,
             y = coverage)) + 
-    scale_x_continuous(breaks = seq(0, 90, 1)) +
-    scale_y_continuous(breaks = seq(0,  4, 1/2)) +
+    scale_x_continuous(breaks = seq(0, 90, 10)) +
+    scale_y_continuous(breaks = c(0, seq(1,3,1/2),4)) +
     coord_cartesian(clip = 'on') +
     geom_segment(aes(y = mean(`coverage`), 
                      yend = mean(`coverage`), 
@@ -38,11 +38,13 @@ dat <- merge(cov, reads, by = "file") %>%
     geom_point(colour = "black",
                shape  = 21, 
                fill   = "gray80",
-               size   = 2) +
+               size   = 2,
+               alpha  = 4/5) +
     theme_bw() +
-    theme(panel.grid = element_line(color = "gray95")) +
+    theme(panel.grid = element_line(color = "gray95"),
+          panel.grid.minor.y = element_blank()) +
     labs(x = "Reads (millions)", 
-         y = "Individual Coverage") +
+         y = "Average Individual Coverage") +
     stat_poly_eq(use_label(c("R2", "p")),
                  label.x = "left",
                  label.y = "top",
@@ -52,7 +54,7 @@ dat <- merge(cov, reads, by = "file") %>%
 (mds <- ggMarginal(lre, type = "density", colour = "black", 
                    linewidth = 1, fill = "gray90", alpha = 0.7))
 
-save_plot("../../plots/lcwgs_reads_coverage.tiff", mds, ncol = 2, 
+save_plot("../../plots/sockeye_lcwgs_reads_coverage.tiff", mds, ncol = 2, 
           base_height = 6, base_asp = 1)
 
 # Tabularized summary stats.
@@ -64,3 +66,6 @@ save_plot("../../plots/lcwgs_reads_coverage.tiff", mds, ncol = 2,
               max_val    = max(value),
               min_val    = min(value),
               sd         = sd(value)))
+
+# Individuals with lowest reads and/or coverage.
+dat %>% arrange(reads) %>% head() %>% select(c(1,3,4))
