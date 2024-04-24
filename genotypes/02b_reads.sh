@@ -7,6 +7,7 @@
 
 
 source ~/.bashrc
+
 for file in *.bam;
 do
         sample="$file"

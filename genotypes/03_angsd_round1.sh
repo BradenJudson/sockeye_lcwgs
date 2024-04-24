@@ -12,9 +12,7 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --array=1-161
 
-source ~/miniconda3/etc/profile.d/conda.sh
-cd /gpfs/fs7/grdi/genarcc/wp3/judsonb/sockeye_lcWGS
-conda activate ../lcwgs_env
+source ~/.bashrc
 
 REGION=`cat ../sockeye_genome_10mb_regions.txt | head -n $SLURM_ARRAY_TASK_ID | tail -n 1`
 GENOMEFOLDER=/gpfs/fs7/grdi/genarcc/common/genomes/Sockeye_Salmon
