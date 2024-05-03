@@ -42,5 +42,5 @@ angsd -b 01_info_files/"$BAMFILES" -ref "$GENOMEFOLDER"/"$GENOME" \
         -rmTriallelic 1e-6 \
         -dumpCounts 2 \
         -minMaf 0.01 \
-        -only_proper_pairs 1
-
+        -only_proper_pairs 1 \
+        -doSaf 1
