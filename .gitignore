@@ -19,3 +19,4 @@ bioclim/fclim85/
 .httr-oauth
 .DS_Store
 .quarto
+data/LandGen-Sockeye-Ext-Data.csv
