@@ -15,5 +15,5 @@ sort -k1,1 -k2,2n angsd_snplist_2sort.txt > sockeye_angsd_snplist.txt
 # Index corresponding snp lists.
 angsd sites index sockeye_angsd_snplist.txt
 
-# Randomly choose 200k SNPs with MAF > 5% and sort.
+# Randomly choose 200k SNPs and index.
 awk '{ if($5 > 0.05) { print }}' sockeye_angsd_snplist.txt | shuf -n 200000 | cut -f1-4 | sort -k1,1 -k2,2n > sockeye_200k_rSNPs_maf5.txt

@@ -20,3 +20,4 @@ bioclim/fclim85/
 .DS_Store
 .quarto
 data/LandGen-Sockeye-Ext-Data.csv
+genotypes/bam_pop_sep/*.txt

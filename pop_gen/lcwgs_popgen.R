@@ -2,6 +2,9 @@ setwd("~/sockeye_lcwgs/pop_gen")
 
 library(ggplot2); library(tidyverse); library(ggrepel)
 
+
+# PCA: Full --------------------------------------------------------------------
+
 # Read in covriance matrix.
 covmat <- read.table("../data/pca_full.cov")
 
@@ -70,3 +73,14 @@ ggplot(data = pcavectors2) +
   annotate("text", label = "S", x = 0.053,  y = 0.097, size = 7)
   
 ggsave("../plots/pca_6MSNPs_NS.tiff", dpi = 300, height = 8, width = 10)
+
+
+# PCA: Fraser ------------------------------------------------------------------
+
+
+
+
+
+# FST --------------------------------------------------------------------------
+
+
