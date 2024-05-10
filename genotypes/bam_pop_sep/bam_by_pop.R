@@ -20,17 +20,19 @@ samples <- read.csv("../../data/LandGen-Sockeye-Ext-Data.csv")[,c(1,6)] %>%
 # Each contains bam info per population.
 # Select only file names at the end.
 dat <- merge(files, samples, by = "fish_ID") %>% 
-  mutate(siteName = tolower(gsub(" ", "_", site_full))) %>% 
+  mutate(siteName  = tolower(gsub(" ", "_", site_full)),
+         direcfile = paste0("03_alignments_dedup_clip/", file)) %>% 
   group_by(site_full) %>% 
   split(., f = .$siteName) %>% 
-  lapply(., function(x) x[,"file"])
+  lapply(., function(x) x[,"direcfile"])
 
 # Write each list of bam files per population as a separate and named txt file.
 mapply(write.table, dat, file=paste0(tolower(names(dat)), "_bams.txt"),
-       MoreArgs = list(quote = FALSE, col.names = FALSE, row.names = FALSE))
+       MoreArgs = list(quote = FALSE, col.names = FALSE, row.names = FALSE, sep = "\n"))
 
 print(c(names(dat)), quote = F) # Check names.
 
 
 # SCP to GPSC ------------------------------------------------------------------
-# Push to cluster using scp
+# scp ../dir/*.txt ../gpsc/judsonb/sockeye_lcwGS/05_pop_bams/text_files
+# dos2unix 05_pop_bams/*.txt

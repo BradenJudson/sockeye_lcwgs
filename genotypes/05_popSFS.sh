@@ -20,6 +20,8 @@ GENOME="GCF_006149115.2_Oner_1.1_genomic.fna"
 OUTFOLDER="05_pop_bams/sfs_outputs"
 SITES="01_info_files/sockeye_angsd_snplist.txt"
 
+dos2unix 05_pop_bams/text_files/*.txt
+
 for POP in $POPLIST
 do
         echo $POP
@@ -30,7 +32,3 @@ do
         -only_proper_pairs -remove_bads 1 \
         -sites "$SITES"
 done
-
-
-
-
