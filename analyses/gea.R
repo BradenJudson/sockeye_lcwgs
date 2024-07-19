@@ -106,7 +106,8 @@ rda.full <- \(model, dataset) {
     mutate(chromosome = as.factor(gsub("_", "", chromosome)))
   
   # Only retain predictors (not conditioning variables).
-  bio_vars_sub <- as.data.frame(bioclim_sub) %>% select(starts_with("bio"))
+  bio_vars_sub <- noquote(attr(rdamodel$terms, "term.labels"))[1:length(attr(rdamodel$terms, "term.labels"))-1]
+  biodf <- bioclim[,c(bio_vars_sub)] # and the data itself
   
   # Make an empty matrix to populate in the following for loop.
   cand_mat <- matrix(nrow = nrow(all_cands), ncol = ncol(bio_vars_sub)) %>% 
@@ -118,9 +119,9 @@ rda.full <- \(model, dataset) {
     cand_mat[i,] <- apply(bio_vars_sub, 2, function(x) cor(x, snp)) } 
   
   # Add candidate SNP information to the correlation matrix computed above.
-  cand_df_cor <- cbind.data.frame(all_cands, cand_mat) %>% rowwise() %>% 
+  cand_df_cor <- cbind.data.frame(all_cands, cand_mat) %>% rowwise()  %>% 
     mutate(correlation = max(c_across(starts_with("bio")), na.rm = TRUE),
-           predictor = names(.[6:(5+ncol(bio_vars_sub))])[which.max(c_across(6:(5+ncol(bio_vars_sub))))])  
+           predictor = names(.[,as.vector(bio_vars_sub)])[which.max(c_across(as.vector(bio_vars_sub)))])  
   
   # Count how many outlier SNPs associate with each predictor variable.
   print(table(cand_df_cor$predictor))
