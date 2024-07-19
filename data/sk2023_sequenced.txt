@@ -2,7 +2,7 @@ Stock_Code	Reporting_Unit	Conservation_Unit	Population	site_full	Collection_Year
 132	Owikeno	SEL-15-02	Ashlulm_Cr	Ashlulm	2001(68), 2002(21), 2004(16), 2021(6)	111	BC	51.68916194	-126.9007227
 604	South Atnarko Lakes	SEL-16-01	Atnarko_R_Above_Lonesome	Atnarko	2018(13), 2020(179), 2021(83)	275	BC	52.18991605	-125.7114207
 608	Azuklotz	SEL-22-02	Azuklotz_Cr	Azuklotz	2020(63), 2022(12)	75	BC	56.09155332	-126.7456458
-23	Harrison-downstream migrating_Late Timing	SEL-03-03	Big_Silver_Cr	Big Silver	2002(89)	89	BC	49.57559391	-121.8286997
+23	Harrison-downstream migrating_Late Timing	SEL-03-03	Silver_Cr	Silver	2002(89)	89	BC	49.57559391	-121.8286997
 519	Washington	NA	Big Creek	Big Creek	1995(100)	100	WA	46.51487	-123.271
 429	Bloomfield	SEL-19-02	Bloomfield_Cr	Bloomfield	2005(111), 2021(9), 2022(22)	142	BC	52.85660524	-128.6816781
 104	Bowron_Early Summer Timing	SEL-07-01	Bowron_R	Bowron	2001(70), 2021(33)	103	BC	54.05689106	-121.8230933
@@ -21,7 +21,7 @@ Stock_Code	Reporting_Unit	Conservation_Unit	Population	site_full	Collection_Year
 111	Koeye	SEL-19-33	Koeye_R	Koeye	2004(4), 2022(93)	97	BC	51.78038626	-127.8624678
 55	Kuthai	SEL-28-01	Kuthai_L	Kuthai	2005(94)	94	BC	59.23088759	-133.2336383
 154	AK-SEAK	AK-SEAK	Kutlaku_L	Kutlaku	2000(95)	95	AK	56.604827	-134.144127
-157	Kodiak	NA	L_Thumb	Thumb (Lower)	1999(110)	110	AK	57.35235	-153.98328
+157	Kodiak	NA	Thumb	Thumb (Lower)	1999(110)	110	AK	57.35235	-153.98328
 65	Mcdonell	SEL-20-08	McDonell_L	McDonnell	1994(31), 2002(68)	99	BC	54.780556	-127.598611
 235	Mercer	SEL-17-07	Mercer_L	Mercer	1983(36)	36	BC	53.58270345	-132.9003866
 20	Nahatlatch_Early Summer timing	SEL-05-02	Nahatlatch_Lake	Nahatlatch	2010(60)	60	BC	50.00441549	-121.7213805
@@ -48,3 +48,4 @@ Stock_Code	Reporting_Unit	Conservation_Unit	Population	site_full	Collection_Year
 228	VI	NA	Vernon_L	Vernon	2001(74), 2002(286)	360	BC	50.03086	-126.43902
 139	Northern Transboundary Fjords	SER-22	Verrett_R	Verrett	2011(39), 2012(35)	74	BC	56.6966178	-131.0040968
 241	Quesnel_Summer Timing	SEL-06-10	Wasko_Cr	Wasko	2001(74)	74	BC	52.56148823	-120.9999735
+229	Lower Fraser River_FA_0.3	3	Harrison_R	Harrison	2013(111), 2014(212), 2015(240), 2016(213), 2017(471), 2018(212), 2019(241), 2020(213)	1913	BC	49.224003	-121.954595

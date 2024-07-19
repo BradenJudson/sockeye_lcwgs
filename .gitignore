@@ -21,3 +21,11 @@ bioclim/fclim85/
 .quarto
 data/LandGen-Sockeye-Ext-Data.csv
 genotypes/bam_pop_sep/*.txt
+**.cov
+genotypes/06_2dSFS_FST.txt
+data/header.txt
+data/lcafs.csv
+data/bam_list_combined.txt
+data/bam_list_sub_n29.txt
+data/pop_frq
+data/pop_fst.txt

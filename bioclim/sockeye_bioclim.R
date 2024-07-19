@@ -4,8 +4,9 @@ library(ggrepel)
 
 setwd("~/sockeye_lcwgs/bioclim")
 
-sites <- read.delim("../data/sk2023_sequenced.txt") %>% 
-  select(c("Population", "Latitude", "Longitude"))
+sites <- read.delim("../data/sk2023_sequenced.txt") %>%
+  filter(Population != "Redfish_L") %>% 
+  select(c("Population", "Latitude", "Longitude")) 
 
 c.list <- list()
 
