@@ -56,7 +56,7 @@ rf <- function(dir) paste0(dir, list.files(pattern = ".*.frq",
 
 temp  <- paste0("../data/pop_frq/non_pruned/", list.files(path = "../data/pop_frq/non_pruned"))
 lcafs <- as.data.frame(do.call(rbind, lapply(temp, rf))) %>% 
-  `rownames<-`(., gsub("\\_.*","", str_sub(temp, start = 28)))
+  `rownames<-`(., gsub("\\_.*","", basename(temp)))
 
 rownames(lcafs)
 
