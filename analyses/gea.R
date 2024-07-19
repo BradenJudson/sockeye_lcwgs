@@ -60,15 +60,17 @@ lcafs <- as.data.frame(do.call(rbind, lapply(temp, rf))) %>%
 
 rownames(lcafs)
 
+# Use below if starting fresh and don't want to wait for above to process.
 # write.csv(lcafs, "../data/lcafs.csv", row.names = T)
 # lcafs <- read.csv("../data/lcafs.csv")
 
 nmod <- rda(lcafs ~ 1, db)
 fmod <- rda(lcafs ~ ., db)
 optdb <- ordiR2step(nmod, scope = formula(fmod), direction = "both")
-summary(optdb)$call
+summary(optdb)$call # Returns optimal dbMEMs to use.
 
-(lcRDA <- vegan::rda(lcafs ~ bio2 + bio4 + bio8 + bio10 + bio15 + bio16))
+(lcRDA <- vegan::rda(lcafs ~ bio2 + bio4 + bio8 + bio10 + bio15 + bio16 + Condition(dbMEM.1 + dbMEM.2 + dbMEM.8),
+                     data = cbind(bioclim, db), scale = TRUE))
 RsquareAdj(lcRDA) 
 (eigvsumm <- round(summary(eigenvals(lcRDA, model = "constrained")), 3)) # % var explained by each axis.
 screeplot(lcRDA) # Variation explained by each RDA axis.
