@@ -29,3 +29,9 @@ data/bam_list_combined.txt
 data/bam_list_sub_n29.txt
 data/pop_frq
 data/pop_fst.txt
+**.gri
+**.grd
+**.rds
+data/sockeye_concat_maf5_m20_nout.imputed_pruned_thinned_pop_af_matrix.txt
+data/Oner_distances_mat.csv
+data/het_estimates.txt

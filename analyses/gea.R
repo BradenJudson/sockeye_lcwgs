@@ -64,8 +64,12 @@ rownames(lcafs)
 # write.csv(lcafs, "../data/lcafs.csv", row.names = T)
 # lcafs <- read.csv("../data/lcafs.csv")
 
-nmod <- rda(lcafs ~ 1, db)
-fmod <- rda(lcafs ~ ., db)
+temp2 <- paste0("../data/pop_frq/subset_100k/", list.files(path = "../data/pop_frq/subset_100k"))
+lcafs2 <- as.data.frame(do.call(rbind, lapply(temp2, rf))) %>% 
+  `rownames<-`(., gsub("\\_.*","", basename(temp2)))
+
+nmod <- rda(lcafs2 ~ 1, db)
+fmod <- rda(lcafs2 ~ ., db)
 optdb <- ordiR2step(nmod, scope = formula(fmod), direction = "both")
 summary(optdb)$call # Returns optimal dbMEMs to use.
 
