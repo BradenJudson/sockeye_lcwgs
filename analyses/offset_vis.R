@@ -3,23 +3,16 @@ setwd("~/sockeye_lcwgs/analyses")
 library(tidyverse); library(sf); library(vcfR); library(ggpmisc)
 library(cowplot); library(viridis); library(ggpubr); library(ConGenFunctions)
 
-off <- read_delim("../data/genomic_offsets.txt")
-sites <- read_delim("../data/sk2023_sequenced.txt")
-het <- read_delim("../data/het_estimates.txt")
+off <- read_delim("../data/genomic_offsets.txt")    # Offset scores.
+sites <- read_delim("../data/sk2023_sequenced.txt") # Site information.
+het <- read_delim("../data/het_estimates.txt")      # Heterozygosity estimates.
 
+# Combine data sources into a single dataframe.
 dat <- merge(off, sites[,c("site", "Latitude", "Longitude")],
            by.x = "population", by.y = "site") %>% 
   cbind(., het[,-1])
 
-# Samples per population.
-sample_counts <- sites %>% 
-  group_by(site_full) %>% 
-  tally()
-
-# summary(sample_counts$n)
-# 
-# hetoff 
-
+# Relationship between Het and offset.
 (hetlm <- ggplot(data = dat,
                  aes(x = indv_het_mean,
                      y = offset85)) +
@@ -49,23 +42,13 @@ ggsave("../plots/offset_het.tiff", dpi = 300,
 USA <- sf::st_as_sf(geodata::gadm(country = "USA", level = 0, path = "../map/"))
 CAN <- sf::st_as_sf(geodata::gadm(country = "CAN", level = 1, path = "../map/"))
 
-offset_plot <- \(df, variable, midpoint, cgr_rev, plot_title, abs_cols) {
-
-    # If we're using absolute colour scale (for both off26 and off85), we need to define
-    # different legend properties. Define here.
-    if(abs_cols == TRUE) qs <- round(as.numeric(quantile(c(df$offset26, df$offset85),
-                                     probs = c(0, 1/3, 2/3, 1))), 2) else
-                         qs <- round(as.numeric(quantile(df[,deparse(substitute(variable))], 
-                                     probs = c(0, 1/3, 2/3, 1))), 2) 
+# Function for plotting offset/diversity metrics.
+offset_plot <- \(df, variable, cgr_rev, plot_title, abs_cols, brks) {
   
-    # Same as above, but for a shared/independent middle value for the legend.
-    if(abs_cols == TRUE) mp <- median(c(df$offset26, df$offset85)) else
-        mp <- mean(as.numeric(df[,deparse(substitute(variable))])) 
-    
-    # Weird scalar for adjusting legend for heterozygosity values.
-    # Need to adjust separately because het values much greater than offset values.
-    if(grepl("het", deparse(substitute(variable))) == T) h <- 0.01 else h <- 0
-
+  # Same as above, but for a shared/independent middle value for the legend.
+  if(abs_cols == TRUE) mp <- median(c(df$offset26, df$offset85)) else
+    mp <- mean(as.numeric(df[,deparse(substitute(variable))])) 
+  
   # Plot land and populations on it.
   p1 <- ggplot(data = df) + theme_bw() +                                    
     geom_sf(data = USA, fill = "gray90", linewidth = 1/10) +
@@ -74,8 +57,8 @@ offset_plot <- \(df, variable, midpoint, cgr_rev, plot_title, abs_cols) {
     labs(x = NULL, y = NULL) +
     geom_point(aes(x = Longitude, 
                    y = Latitude, 
-                   fill = {{variable}},   # Colour is metric of interest.
-                   size = {{variable}}),  # Point size is also proportional to value.
+                   fill  = {{variable}},   # Colour is metric of interest.
+                   size  = {{variable}}),  # Point size is also proportional to value.
                shape = 21, stroke = 1/2) + ggtitle(plot_title) + 
     theme(legend.background = element_rect(colour = 'black', fill = 'white'),
           legend.position = "right", 
@@ -85,15 +68,18 @@ offset_plot <- \(df, variable, midpoint, cgr_rev, plot_title, abs_cols) {
     scale_fill_gradient2(low  = if(cgr_rev == FALSE) "skyblue" else "red2", 
                          high = if(cgr_rev == FALSE) "red2" else "skyblue", 
                          midpoint = mp, 
-                         breaks = if(abs_cols == TRUE) c(0.01, qs[2:length(qs)]) else qs, 
-                         limits = if(abs_cols == TRUE) c(0.017, max(df[,"offset85"])) else
-                           c(min(df[,deparse(substitute(variable))]-h),
-                             max(df[,deparse(substitute(variable))]))) +
-    scale_size_continuous(breaks = if(abs_cols == TRUE) c(0.01, qs[2:length(qs)]) else qs,
-                          limits = if(abs_cols == TRUE) c(0.017, max(df[,"offset85"])) else
-                            c(min(df[,deparse(substitute(variable))]-h),
-                              max(df[,deparse(substitute(variable))]))) +
-    guides(fill = guide_legend(), size = guide_legend()) 
+                         breaks   = scales::breaks_pretty(n = brks),
+                         limits   = if(abs_cols == TRUE) c(min(df[,"offset26"]), max(df[,"offset85"])) else
+                           c(min(df[,deparse(substitute(variable))]),
+                             plyr::round_any(max(df[,deparse(substitute(variable))]), 
+                                             accuracy = 0.01, f = ceiling))) +
+    scale_size_continuous(breaks = scales::breaks_pretty(n = brks),
+                          limits = if(abs_cols == TRUE) c(min(df[,"offset26"]), max(df[,"offset85"])) else
+                            c(min(df[,deparse(substitute(variable))]),
+                              plyr::round_any(max(df[,deparse(substitute(variable))]), 
+                                              accuracy = 0.01, f = ceiling))) +
+    guides(fill = guide_legend(), 
+           size = guide_legend()) 
   # Above ensures size and fill legends are combined.
   
   # Extract legend from plot and remove margins.  
@@ -113,20 +99,20 @@ offset_plot <- \(df, variable, midpoint, cgr_rev, plot_title, abs_cols) {
 
 
 (off85 <- offset_plot(dat, variable = offset85, 
-                      cgr_rev = FALSE, abs_cols = F,
+                      cgr_rev = FALSE, abs_cols = F, brks = 5,
                       plot_title = "Genomic offset (ssp85)"))
 ggsave("../plots/genomic_offset85.tiff", bg = 'white',
        dpi = 300, width = 8, height = 6)
 
 (off26 <- offset_plot(dat, variable = offset26, 
-                      cgr_rev = FALSE, abs_cols = F,
+                      cgr_rev = FALSE, abs_cols = F, brks = 5,
                       plot_title = "Genomic offset (ssp26)"))
 ggsave("../plots/genomic_offset26.tiff", bg = 'white',
        dpi = 300, width = 8, height = 6)
 
 (hetpl <- offset_plot(dat,
                       variable = indv_het_mean,
-                      cgr_rev = TRUE, abs_cols = F,
+                      cgr_rev = TRUE, abs_cols = F, brks = 6,
                       plot_title = "Average individual heterozygosity"))
 ggsave("../plots/indv_heterozygosity2.tiff", bg = 'white',
        dpi = 300, width = 8, height = 6)
@@ -137,12 +123,10 @@ ggsave("../plots/offset_het.tiff", width = 14, height = 8, dpi = 300)
 
 # Best/worst offset estimates.
 cowplot::plot_grid(plotlist = list(offset_plot(dat, variable = offset26, 
-                                               midpoint = mean(dat$offset26),
-                                               cgr_rev = FALSE, abs_cols = TRUE,
+                                               cgr_rev = FALSE, abs_cols = TRUE, brks = 5,
                                                plot_title = "Genomic offset (ssp26)")[[1]], 
                                    offset_plot(dat, variable = offset85, 
-                                               midpoint = mean(dat$offset85), 
-                                               cgr_rev = FALSE, abs_cols = TRUE,
+                                               cgr_rev = FALSE, abs_cols = TRUE, brks = 5,
                                                plot_title = "Genomic offset (ssp85)")),
                                     ncol = 2)
 ggsave("../plots/offset_26_85.tiff", width = 14, height = 8, dpi = 300)
