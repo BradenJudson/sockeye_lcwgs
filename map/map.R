@@ -118,3 +118,29 @@ ggdraw(plot = pnw) +
 
 ggsave("../plots/map_winset.tiff", dpi = 300, 
        width = 6, height = 6)
+
+# Simplified PPT version -------------------------------------------------------
+# 
+# library(viridis)
+# 
+# (chmap <- ggplot() +
+#     geom_sf(data = USA, fill = "gray90", linewidth = 1/10) +
+#     geom_sf(data = bcn, fill = "gray90", linewidth = 1/10) +
+#     geom_sf(data = bch, fill = "gray90", linewidth = 1/10) +
+#     geom_sf(data = rivers,   colour = "skyblue",  linewidth = 1/4) +
+#     geom_point(data = sites, size = 2.5, stroke = 1/3,
+#                shape = 21, color = "black",
+#                aes(x = Longitude, y = Latitude, fill = as.factor(Latitude))) +
+#     scale_fill_manual(values = c(viridis_pal(option = "D")(length(unique(sites$site)))),
+#                       labels = paste(sites$sitenum, sites$site)) +
+#     guides(fill = guide_legend(override.aes = list(alpha = 0))) +
+#     coord_sf(xlim = c(-115, -155), ylim = c(44, 62)) +
+#     theme_minimal() +
+#     theme(legend.position = "none", panel.grid = element_blank(),
+#           panel.background = element_rect(fill = alpha("skyblue", 1/10)),
+#           panel.border = element_rect(color = "black", fill = NA),
+#           plot.margin = unit(c(0,0,0,0), "cm"),
+#           axis.ticks = element_line(color = 'black')))
+# 
+# ggsave("../plots/sockeye_map_simple.tiff", dpi = 300,
+#        width = 6, height = 6, bg = 'white')

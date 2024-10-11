@@ -33,7 +33,7 @@ dat <- merge(off, sites[,c("site", "Latitude", "Longitude")],
     guides(fill = guide_legend(ncol = 2, byrow = TRUE)) +
     theme(legend.title = element_blank()))
 
-ggsave("../plots/offset_het.tiff", dpi = 300,
+ggsave("../plots/offset_het_lm.tiff", dpi = 300,
        width = 9, height = 7, bg = 'white')
 
 # Visualize w/ map -------------------------------------------------------------
